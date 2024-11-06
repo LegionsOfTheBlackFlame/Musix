@@ -1,0 +1,24 @@
+>>> API Endpoints <<<
+    - get song objects 
+    req ([countries])
+    res ([{id: songId, name: songName, artist: artistName, url: songUrl, country: countryName}])
+
+--------------------------------------------------------------------------------
+-> fn compare answer to data
+-> pick random countries set
+-> get song data from api (country set)
+
+> game mode selected
+> fn country picker (region, quantity)
+    returns array of countries
+> API request to get song data
+    returns array of songs objects
+    {id: songId, name: songName, artist: artistName, url: songUrl, country: countryName}
+> fetch songs from api
+> qeue songs to web player
+then
+> play first song
+... user input trigger
+> compare user input to song object's country value
+if match -> qeue green alert
+else -> qeue red alert

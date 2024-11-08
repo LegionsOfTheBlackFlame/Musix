@@ -1,7 +1,7 @@
 // Layout.js
 import React from 'react';
-import SpinningEarth from './CompSphere.js'; // Import SpinningEarth
-import Navbar from './CompNavbar.js'; // Import Navbar
+import SpinningEarth from './components/CompSphere.js'; // Import SpinningEarth
+import Navbar from './components/CompNavbar.js'; // Import Navbar
 
 const Layout = ({ children }) => {
     return (

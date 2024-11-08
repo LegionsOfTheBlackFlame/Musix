@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect, useContext, useRef } from 'react';
-import CompHero from './CompHero.js';
+import CompHero from '../components/CompHero.js';
 
 function Pg() {
     return (

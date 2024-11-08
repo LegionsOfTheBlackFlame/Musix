@@ -3,7 +3,7 @@ import React from 'react';
 import { useState, useEffect, useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
-import img from "./logo.png"
+import img from "../logo.png"
 
 
 

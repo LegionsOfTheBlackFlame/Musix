@@ -1,8 +1,8 @@
 import React from 'react';
 import { useState, useEffect, useContext, useRef } from 'react';
-import { leaderboard } from './dataLeaderboard.js';
-import logo from './logo.png';
-import CompRank from './CompRank.js';
+import { leaderboard } from '../dataLeaderboard.js';
+import logo from '../logo.png';
+import CompRank from '../components/CompRank.js';
 
 const thisUserID = 310;
 

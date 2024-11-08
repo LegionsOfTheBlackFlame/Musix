@@ -1,14 +1,14 @@
 import React from 'react';
 import { useState, useEffect, useContext, useRef } from 'react';
 
-import games from './dataGames.js';
+import games from '../dataGames.js';
 
 
-import CompNavbar from './CompNavbar.js';
-import CompHero from './CompHero.js';
-import CompGameCard from './compGameCard.js';
+import CompNavbar from '../components/CompNavbar.js';
+import CompHero from '../components/CompHero.js';
+import CompGameCard from '../components/CompGameCard.js';
 
-import SpinningEarth from './CompSphere.js';
+import SpinningEarth from '../components/CompSphere.js';
 
 
 games.forEach((game) => console.log("this is game : " + `${game.description}`));

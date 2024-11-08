@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { randomIndex } from './utils.js';
+import { randomIndex } from '../utils.js';
 
 const CountryObj = {
   Bolivia: ["Luzmila Carpio", "Los Jairas", "Atajo"],

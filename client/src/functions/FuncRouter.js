@@ -2,11 +2,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-import Pg from './Pg.js';
-import PgMain from './PgMain.js';
-import PgAbout from './PgAbout.js';
-import PgLeaderboard from './PgLeaderboard.js';
-import Layout from './Layout.js'; // Import Layout
+import Pg from '../pages/Pg.js';
+import PgMain from '../pages/PgMain.js';
+import PgAbout from '../pages/PgAbout.js';
+import PgLeaderboard from '../pages/PgLeaderboard.js';
+import Layout from '../Layout.js'; // Import Layout
 
 function AppRouter() {
     return (

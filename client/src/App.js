@@ -2,8 +2,8 @@ import logo from './logo.svg';
 import './App.css';
 import './hover.css';
 
-import PgMain from './PgMain.js';
-import AppRouter from './FuncRouter.js';
+
+import AppRouter from './functions/FuncRouter.js';
 
 function App() {
   return <AppRouter />

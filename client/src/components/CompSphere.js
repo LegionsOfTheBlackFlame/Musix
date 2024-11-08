@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { useEffect, useRef } from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import earthTexture from './earth.jpg'; // Replace with your own Earth texture image
+import earthTexture from '../earth.jpg'; // Replace with your own Earth texture image
 
 const SpinningEarth = () => {
     const mountRef = useRef(null);

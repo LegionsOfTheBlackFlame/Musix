@@ -1,8 +1,8 @@
 import React from "react"; 
 import { useState, useEffect, useContext, useRef } from "react";
-import logo from "./logo.png";
-import cardLogo from "./game-card-logo.svg";
-import gameModeProvider from './FuncGameModeProvider.js';
+import logo from "../logo.png";
+import cardLogo from "../game-card-logo.svg";
+import gameModeProvider from '../functions/FuncGameModeProvider.js';
 
 const CompGameCard = ({gameData}) => {
 console.log("game card got called!")

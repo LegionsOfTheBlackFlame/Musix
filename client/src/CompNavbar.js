@@ -46,12 +46,8 @@ const CompNavbar = () => {
                         </Link>
                     </li>
 
-                    <li
-                        className='nav-option'>
-                            <Link className='nav-option' to='/login'>Log-in</Link>
-</li>
  <li className="nav-option">
-                        <a href="http://localhost:3100/login">Spotify ile Giriş Yap</a>
+                        <a className='nav-option' href="http://localhost:3100/login">Log in</a>
 
                     </li>
                 </ul>

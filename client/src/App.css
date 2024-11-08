@@ -41,12 +41,7 @@
   background-color: var(--clr-dark);
 
 }
-Link {
-  text-decoration: none;
-}
-Link:visited {
-  text-decoration: none;
-}
+
 h1 {
   
   font-family: "Inter-Bold", arial, sans-serif;

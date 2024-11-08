@@ -1,9 +1,11 @@
 // Provide random index within array limit
 export const randomIndex = (arr) => {
-
-    let index = Math.floor(Math.random() * arr.length);
-    return index;
-}
+    if (!Array.isArray(arr) || arr.length === 0) {
+        console.error("Provided array is undefined or empty");
+        return -1; // Return -1 or some error indication if array is invalid
+    }
+    return Math.floor(Math.random() * arr.length);
+};
 
 export const checkLimit = (value, limit) => {
     if (value < limit) {
@@ -12,4 +14,6 @@ export const checkLimit = (value, limit) => {
         return true;
     } else {
         console.error("Value is greater than limit");
-    }}
+        return false; // Adding a return statement for consistent behavior
+    }
+};

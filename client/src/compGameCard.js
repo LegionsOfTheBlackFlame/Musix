@@ -4,7 +4,7 @@ import logo from "./logo.png";
 import cardLogo from "./game-card-logo.svg";
 import gameModeProvider from './FuncGameModeProvider.js';
 
-const CompGameCard = ( {gameData}) => {
+const CompGameCard = ({gameData}) => {
 console.log("game card got called!")
     const bgColorClass = "background-" + `${gameData.color}`;
     const colorClass = "color-" + `${gameData.color}`;
@@ -18,7 +18,8 @@ console.log("game card got called!")
     return (
         <div 
         className="game-card-container container">
-            <img src={cardLogo}></img>
+            <img src={cardLogo}>
+            </img>
             <h1>{gameData.name}</h1>
             <h2 className={`${colorClass}`}>{gameData.description}</h2>
         <p>{gameData.subtext}</p>

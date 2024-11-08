@@ -22,13 +22,12 @@ const PgMain = () => {
             <div
                 id='main_page'
                 className='page main-page'>
-                <CompNavbar />
                 
                 <SpinningEarth />
                 
-                {/* <div className='game-cards-container'>
+                <div className='game-cards-container'>
                 {games.map((game) => <CompGameCard key={game.id} gameData={game} />)}
-                </div> */}
+                </div>
             </div>
         </>
     )

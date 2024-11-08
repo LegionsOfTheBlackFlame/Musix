@@ -41,7 +41,12 @@
   background-color: var(--clr-dark);
 
 }
-
+Link {
+  text-decoration: none;
+}
+Link:visited {
+  text-decoration: none;
+}
 h1 {
   
   font-family: "Inter-Bold", arial, sans-serif;
@@ -120,111 +125,66 @@ h1 {
   cursor: pointer;
 }
 
+.nav-option > * {
+  text-decoration: none;
+  
+}
+
 .hero-comp-container {
-  height: 20vh;
+  margin: auto;
+  width: 700px;
   padding: 10em;
   /* outline: 2px solid #ff0000; */
+  position: relative;
 }
 
-.hero-comp-container>* {
-
+.hero-comp-container > * {
   color: var(--clr-light);
-  /* outline: 2px solid #ffffff50; */
 }
 
-.coug {
+.hero-comp-container > h1 {
+  font-size: 7.5em;
+}
+
+.country, .band {
   position: absolute;
   width: max-content;
   color: #ffffff;
-  left: 51%;
-  right: 49%;
-
-  /* outline: 2px solid #ffffff50; */
-
-
+  transition: opacity 1s ease-in-out, transform 1s ease-in-out;
 }
 
-.solv {
-  position: absolute;
-  width: max-content;
-
-  color: #ffffff;
-
+.solv-alpha, .solv-beta {
+  animation: fadeOut 4s forwards;
 }
 
-.solv-alpha {
-  position: absolute;
-  width: max-content;
-  left: 38%;
-  right: 55%;
-  top: 18%;
-  animation: test2 4s infinite;
+.coag-alpha, .coag-beta {
+  animation: fadeIn 4s forwards;
 }
 
-.solv-beta {
-  position: absolute;
-  width: max-content;
-  left: 40%;
-  right: 60%;
-  top: 50%;
-  animation: test2 1s infinite;
-}
 
-.coug-alpha {
-  position: absolute;
-  width: max-content;
-  left: 45%;
-  right: 55%;
-  top: 25%;
-  animation: test 4s infinite;
-}
-
-.coug-beta {
-  position: absolute;
-  left: 50%;
-  right: 50%;
-  top: 55%;
-  animation: test 1s infinite;
-}
-
-@keyframes test2 {
-  0% {
-    transform: translate(0%, 0%);
+/* Fade animations */
+@keyframes fadeOut {
+  0%, 30% {
     opacity: 1;
+    transform: translate(0, 0);
   }
-
-  20% {
-    transform: translate(0%, 0%);
-    opacity: 0.1;
-  }
-
   100% {
-    transform: translate(100%, 100%);
-
     opacity: 0;
+    transform: translate(20px, 20px); /* Slight movement to indicate transition */
   }
-
 }
 
-@keyframes test {
-  0% {
-    transform: translate(0%, 0%);
+@keyframes fadeIn {
+  0%, 30% {
     opacity: 0;
+    transform: translate(-20px, -20px); /* Opposite movement for the other element */
   }
-
-  45% {
-    transform: translate(-100%, -100%);
-    opacity: 1;
-  }
-
   100% {
-    transform: translate(-100%, -100%);
-
     opacity: 1;
+    transform: translate(0, 0);
   }
-
-
 }
+
 
 .game-card-container {
 
@@ -306,7 +266,104 @@ h1 {
   max-height: 42px;
 }
 
+.about-page {
+  width: 50%;
+  height: 100vh;
+  margin: auto;
+  padding: 5em;
+  background-image: linear-gradient(to right, #0000004d 10%, #000000c0 50%, #0000004d 90%);
+/* outline: 2px solid #ff0000; */
+}
 
+.about-page > h1 {
+  padding: 1em 0;
+  text-align: center;
+  color: var(--clr-light);
+}
+
+.about-page > p {
+ 
+  margin: auto;
+  font-size: large;
+  text-align: center;
+  color: var(--clr-light);
+  
+}
+
+.leaderboard-page {
+  width: 50%;
+  
+  margin: auto;
+  padding: 1em 5em;
+  border-radius: 10em;
+  background-color: var(--clr-light);
+  
+ /* outline: 2px solid #ff0000; */
+}
+
+.leaderboard-page > * {
+ 
+  text-align: center;
+  color: var(--clr-dark);
+}
+.leaderboard-container {
+  margin: 5em auto;
+  padding: 1em;
+  border: 2px solid var(--clr-dark);
+  border-radius: 5em;
+  
+
+}
+.rank-container > * {
+  /* outline: 2px solid #ff0000; */
+}
+.rank-container {
+  display: flex;
+  flex-direction: row;
+  
+  align-items: center;
+}
+.player-rank {
+  width: 10%; 
+  height: auto;
+  background-color: var(--clr-dark);
+  border-radius: 50%;
+}
+.player-rank > h1 {
+  color: var(--clr-light) !important;
+}
+.player-info{
+  width: 90%;
+  padding: 1em 2em ;
+  border-radius: 2.5em;
+  text-align: left !important;
+  background-color: #000;
+}
+.player-info > h3 {
+  font-size: 30px;
+  color: var(--clr-light);
+}
+.player-info > h5 {
+  margin-left: 1em;
+  font-size: 15px;
+  color: #a7a7a7;
+}
+.player-info > * {
+  margin: 0;
+  /* outline: 2px solid #ff0000; */
+}
+
+.profile-pic {
+  width: 5em;
+  height: 5em;
+  border: 2px solid var(--clr-dark);
+  border-radius: 50%;
+}
+.profile-pic > img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
 /* ------------------------------------ */
 
 .color {

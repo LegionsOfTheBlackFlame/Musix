@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useEffect, useContext, useRef } from 'react';
+import { Link } from 'react-router-dom';
 
 import img from "./logo.png"
 
@@ -12,15 +13,13 @@ const CompNavbar = () => {
             <div
                 id='nav_logo'
                 className='nav-logo-container'>
-                    <a
-                    id='home_link'
-                    className='nav-option'>
+                    <Link to='/'>
                         <img
                             id='nav_logo_img'
                             className='nav-logo-img'
                             src={img}
                             alt='Muzix Logo' />
-                    </a>
+                    </Link>
             </div>
             <div
                 id='nav_menu'
@@ -29,20 +28,24 @@ const CompNavbar = () => {
                     className='nav-menu'>
                     <li
                         className='nav-option'>
-                            <a
-                            id='maps-link'>Maps</a>
+                           <Link className='nav-option' to='/games'>Games</Link>
                     </li>
 
                     <li
                         className='nav-option'>
-                            <a
-                            id='about-link'>About</a>
+                           <Link className='nav-option' to='/about'>About</Link>
+                    </li>
+                    
+                    <li
+                        className='nav-option'>
+                            <Link  className='nav-option' to='/leaderboard'>
+                        Leaderboard
+                        </Link>
                     </li>
 
                     <li
                         className='nav-option'>
-                            <a
-                            id='leaderboard-link'>Leaderboard</a>
+                            <Link className='nav-option' to='/login'>Log-in</Link>
                     </li>
 
                 </ul>

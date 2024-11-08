@@ -3,13 +3,10 @@ import './App.css';
 import './hover.css';
 
 import PgMain from './PgMain.js';
+import AppRouter from './FuncRouter.js';
 
 function App() {
-  return (
-    <div className="App">
-     <PgMain/>
-    </div>
-  );
+  return <AppRouter />
 }
 
 export default App;

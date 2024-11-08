@@ -302,27 +302,29 @@ h1 {
   color: var(--clr-dark);
 }
 .leaderboard-container {
-  margin: 5em auto;
+  margin: 2em auto;
   padding: 1em;
-  border: 2px solid var(--clr-dark);
-  border-radius: 5em;
-  
 
+}
+.leaderboard-page > h3 {
+  font-size: 40px;
 }
 .rank-container > * {
   /* outline: 2px solid #ff0000; */
 }
 .rank-container {
   display: flex;
+  margin: 1em 0;
   flex-direction: row;
-  
+  background-color: var(--clr-dark);
+  border-radius: 5em;
   align-items: center;
 }
 .player-rank {
   width: 10%; 
   height: auto;
-  background-color: var(--clr-dark);
-  border-radius: 50%;
+  margin: 0 1em;
+  border-radius: 10em;
 }
 .player-rank > h1 {
   color: var(--clr-light) !important;

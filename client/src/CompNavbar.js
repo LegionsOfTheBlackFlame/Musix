@@ -1,12 +1,15 @@
 import React from 'react';
+
 import { useState, useEffect, useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 import img from "./logo.png"
 
-const CompNavbar = () => {
 
+
+const CompNavbar = () => {
     return (
+
         <div
             id='nav_bar'
             className='nav-bar'>
@@ -46,17 +49,15 @@ const CompNavbar = () => {
                     <li
                         className='nav-option'>
                             <Link className='nav-option' to='/login'>Log-in</Link>
+</li>
+ <li className="nav-option">
+                        <a href="http://localhost:3100/login">Spotify ile Giriş Yap</a>
+
                     </li>
-
                 </ul>
-                <div
-                id='nav_account'
-                className='nav-account-container nav-option'>
-                    <img></img>
-                </div>
             </div>
-
-        </div>)
-}
+        </div>
+    );
+};
 
 export default CompNavbar;

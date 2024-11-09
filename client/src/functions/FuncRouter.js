@@ -14,8 +14,9 @@ function AppRouter() {
         <Router>
             <Layout>
                 <Routes>
-                    <Route path="/" element={<PgGame />} />
+                    <Route path="/" element={<Pg />} />
                     <Route path="/games" element={<PgMain />} />
+                    <Route path="/game" element={<PgGame />} />
                     <Route path="/about" element={<PgAbout />} />
                     <Route path="/leaderboard" element={<PgLeaderboard />} />
                 </Routes>

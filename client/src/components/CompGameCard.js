@@ -1,36 +1,33 @@
 import React from "react"; 
-import { useState, useEffect, useContext, useRef } from "react";
-import logo from "../logo.png";
 import cardLogo from "../game-card-logo.svg";
-import gameModeProvider from '../functions/FuncGameModeProvider.js';
+import CompGameButton from './CompGameButton.js'; // Import the CompGameButton that contains the button
 
-const CompGameCard = ({gameData}) => {
-console.log("game card got called!")
+const CompGameCard = ({ gameData }) => {
     const bgColorClass = "background-" + `${gameData.color}`;
     const colorClass = "color-" + `${gameData.color}`;
-
-    console.log("this is game data : " + gameData);
-    console.log("this is color class : " + colorClass);
-
+    
     const regionIndex = gameData.region;
     const quantity = gameData.nations;
 
     return (
-        <div 
-        className="game-card-container container">
-            <img src={cardLogo}>
-            </img>
+        <div className="game-card-container container">
+            <img src={cardLogo} alt="Game Card Logo" />
             <h1>{gameData.name}</h1>
             <h2 className={`${colorClass}`}>{gameData.description}</h2>
-        <p>{gameData.subtext}</p>
+            <p>{gameData.subtext}</p>
             <div className="score-container">
                 <h1 className={`${colorClass}`}>12983</h1>
                 <p>Your max score</p>
             </div>
 
-            <button className={`${bgColorClass}` + " btn"} onClick={() => gameModeProvider(regionIndex, quantity)}>Play</button>
+            {/* Render CompGameButton instead of a direct button */}
+            <CompGameButton
+                regionIndex={regionIndex}
+                quantity={quantity}
+                bgColorClass={bgColorClass}
+            />
         </div>
-    )
-}
+    );
+};
 
 export default CompGameCard;

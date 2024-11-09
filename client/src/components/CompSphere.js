@@ -13,7 +13,7 @@ const SpinningEarth = () => {
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(800, 575);
         mountRef.current.appendChild(renderer.domElement);
 
         // Earth geometry and texture

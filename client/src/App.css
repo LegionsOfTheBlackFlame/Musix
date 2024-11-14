@@ -125,7 +125,8 @@ h1 {
 }
 
 .main-page {
-
+  pointer-events: none;
+outline: 2px solid var(--clr-red-dark);
   background-color: var(--clr-none);
 }
 

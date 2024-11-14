@@ -12,7 +12,7 @@ import Layout from '../Layout.js'; // Import Layout
 
 function AppRouter() {
     return (
-        <Router>
+        <Router future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
             <Layout>
                 <Routes>
                     <Route path="/" element={<Pg />} />

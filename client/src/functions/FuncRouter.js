@@ -7,6 +7,7 @@ import PgMain from '../pages/PgMain.js';
 import PgAbout from '../pages/PgAbout.js';
 import PgLeaderboard from '../pages/PgLeaderboard.js';
 import PgGame from '../pages/PgGame.js';
+import PgScore from '../pages/PgScore.js';
 import Layout from '../Layout.js'; // Import Layout
 
 function AppRouter() {
@@ -19,6 +20,7 @@ function AppRouter() {
                     <Route path="/game" element={<PgGame />} />
                     <Route path="/about" element={<PgAbout />} />
                     <Route path="/leaderboard" element={<PgLeaderboard />} />
+                    <Route path="/score" element={<PgScore />} />
                 </Routes>
             </Layout>
         </Router>

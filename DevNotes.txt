@@ -8,9 +8,13 @@
     res([{id: userId, username: username, score: score, rank: rank, url: profileUrl}])
 --------------------------------------------------------------------------------
 
-todo:
-    - fix layout and style
-    - change globe material
-    - responsivity
-    - dynamic game card logo color
+iss 1 :  Connecting to the server
+iss 2 : Game Logic
+iss 3 : Design and responsivity
+
+iss 4 : Version control
+
+
+extras:
+    -`v7_startTransition` exprimental react router module
     

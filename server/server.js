@@ -30,7 +30,11 @@ app.get('/login', (req, res) => {
 
 // Spotify'dan dönen yetkilendirme kodunu işler ve kullanıcı bilgilerini alır
 app.get('/callback', async (req, res) => {
-    const code = req.query.code || null;
+    const code = req.query.code;
+
+    if (!code) {
+        return res.send("Yetkilendirme kodu bulunamadı.");
+    }
 
     try {
         // Yetkilendirme kodunu access token'a çevirme isteği
@@ -56,13 +60,59 @@ app.get('/callback', async (req, res) => {
         });
 
         const userID = userProfile.data.id;
-        const userImage = userProfile.data.images[0]?.url;  // Profil fotoğrafı URL'si
-            console.log(userProfile);
-        // Kullanıcı bilgilerini aldıktan sonra 3000 portuna yönlendir
-        res.redirect(`http://localhost:3000?userID=${userID}&userImage=${encodeURIComponent(userImage || '')}`);
+        const userImage = userProfile.data.images[0]?.url || '';  // Profil fotoğrafı URL'si
+
+        res.redirect(`http://localhost:3000?userID=${encodeURIComponent(userID)}&userImage=${encodeURIComponent(userImage)}&accessToken=${encodeURIComponent(accessToken)}`);
     } catch (error) {
-        console.error('Hata:', error);
-        res.send("Bir hata oluştu.");
+        console.error('Hata:', error.response?.data || error.message);
+        res.redirect(`http://localhost:3000?error=Bir hata oluştu.`);
+    }
+});
+
+// Rastgele şarkı almak için endpoint
+app.get('/song', async (req, res) => {
+    const accessToken = req.query.accessToken;
+
+    if (!accessToken) {
+        return res.json({ error: "Access token bulunamadı." });
+    }
+
+    try {
+        // Rastgele bir ülke belirle
+        const countries = ['CA', 'US', 'RU', 'GB', 'BR'];
+        const randomCountry = countries[Math.floor(Math.random() * countries.length)];
+
+        // Rastgele bir şarkıyı almak için Spotify API'sini kullanır
+        const trackResponse = await axios.get('https://api.spotify.com/v1/recommendations', {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            },
+            params: {
+                seed_genres: 'pop',
+                limit: 1,
+                market: randomCountry
+            }
+        });
+
+        if (trackResponse.data.tracks.length === 0) {
+            return res.json({ error: "Şarkı bulunamadı." });
+        }
+
+        const track = trackResponse.data.tracks[0];
+        const songName = track.name;
+        const artistName = track.artists.map(artist => artist.name).join(', ');
+        const previewUrl = track.preview_url || '';
+
+        // Şarkı bilgilerini JSON olarak döndür
+        res.json({
+            songName,
+            artistName,
+            previewUrl,
+            country: randomCountry
+        });
+    } catch (error) {
+        console.error('Hata:', error.response?.data || error.message);
+        res.json({ error: "Bir hata oluştu." });
     }
 });
 
@@ -70,3 +120,4 @@ app.get('/callback', async (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
+ 

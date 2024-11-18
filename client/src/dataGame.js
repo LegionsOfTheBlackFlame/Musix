@@ -1,3 +1,5 @@
+// Mock date used to develop game logic
+
 const thisGameData = [
     {
         "id": 1,

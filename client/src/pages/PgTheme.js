@@ -1,3 +1,5 @@
+// Design system showcase; for development purposes
+
 import React from 'react';
 
 const Theme = () => {

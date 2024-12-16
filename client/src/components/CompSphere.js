@@ -22,13 +22,12 @@ const SpinningEarth = () => {
         renderer.setSize(1200, 575);
         mountRef.current.appendChild(renderer.domElement);
 
-<<<<<<< HEAD
+
         // Earth geometry and texture
         const earthGeometry = new THREE.SphereGeometry(1.5, 40, 40);
-=======
-        // Dünya geometrisi ve dokusu
-        const earthGeometry = new THREE.SphereGeometry(1, 40, 40);
->>>>>>> d9255cb9b203ad97af4794277549a6816978547f
+
+      
+
         const earthMaterial = new THREE.MeshStandardMaterial({
             map: new THREE.TextureLoader().load(earthTexture),
         });

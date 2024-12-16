@@ -1,0 +1,15 @@
+.hero-container {
+    margin: auto;
+    width: auto;
+    padding: 10em;
+    /* outline: 2px solid #ff0000; */
+    position: relative;
+  }
+  
+  .hero-container > * {
+    color: var(--clr-light);
+  }
+  
+  .hero-comp-container > h1 {
+    font-size: 7.5em;
+  }

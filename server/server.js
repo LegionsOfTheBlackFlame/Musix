@@ -1,10 +1,13 @@
 // Çevresel değişkenleri yüklemek için dotenv modülünü kullanıyoruz
 require('dotenv').config();
+const myData = require('./data/dataHero.js');
 
 // Gerekli modülleri dahil ediyoruz
 const express = require('express');
+const cors = require('cors');
 const axios = require('axios');
 const querystring = require('querystring');
+const { message } = require('statuses');
 
 const app = express();
 const port = 3100; // Spotify kimlik doğrulama işlemi için 3100 portunu kullanıyoruz
@@ -13,6 +16,8 @@ const port = 3100; // Spotify kimlik doğrulama işlemi için 3100 portunu kulla
 console.log('Redirect URI:', process.env.REDIRECT_URI);
 console.log('Client ID:', process.env.CLIENT_ID);
 console.log('Client Secret:', process.env.CLIENT_SECRET);
+
+app.use(cors());
 
 // Spotify ile giriş için yetkilendirme isteği
 app.get('/login', (req, res) => {
@@ -64,6 +69,10 @@ app.get('/callback', async (req, res) => {
         console.error('Hata:', error);
         res.send("Bir hata oluştu.");
     }
+});
+
+app.get(`/data`, async (req, res) => {
+    res.json({ message: "this is data", data: myData});
 });
 
 // Sunucuyu belirtilen port üzerinde başlatır

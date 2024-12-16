@@ -1,3 +1,4 @@
+// Mock date used to develop game mode cards
 const games = [
     {
         "id": 1,

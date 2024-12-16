@@ -93,7 +93,7 @@
 .background-green {
   background-color: var(--clr-green) !important;
 }
-
+ 
 .background-yellow {
   background-color: var(--clr-yellow) !important;
 }
@@ -118,6 +118,7 @@ outline: 2px solid var(--clr-red-dark);
   margin: auto;
   padding: 1em 2em;
   flex-direction: row;
+  background-image: linear-gradient(to right, #0000004d 10%, #000000c0 50%, #0000004d 90%);
   
 }
 
@@ -252,11 +253,11 @@ outline: 2px solid var(--clr-red-dark);
 
 .about-page {
   width: 50%;
-  height: 100vh;
+ 
   margin: auto;
   padding: 5em;
   background-image: linear-gradient(to right, #0000004d 10%, #000000c0 50%, #0000004d 90%);
-/* outline: 2px solid #ff0000; */
+outline: 2px solid #ff0000;
 }
 
 .about-page > h1 {

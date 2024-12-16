@@ -1,29 +1,36 @@
 import * as THREE from 'three';
 import { useEffect, useRef } from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import earthTexture from '../earth.jpg'; // Kendi dünya doku dosyanızla değiştirin
+import earthTexture from '../earth.jpg'; // Replace with your own Earth texture file
 
+/**
+ * SpinningEarth Component
+ * Renders a 3D spinning Earth with interactive controls.
+ * Features:
+ * - Smooth rotation with adjustable speed.
+ * - Mouse-based interaction for zooming and panning.
+ * - Responsive lighting setup to enhance the visual experience.
+ */
 const SpinningEarth = () => {
     const mountRef = useRef(null);
-    const defaultRotationSpeed = -0.005; // Dünya'nın normal dönüş hızı (ters yönde dönecek)
-    const slowRotationSpeed = -0.001; // Etkileşim sırasında kullanılacak yavaş dönüş hızı
-    const rotationSpeedRef = useRef(defaultRotationSpeed); // Dönüş hızını ref olarak saklayın
-    const earthTilt = 23.5 * (Math.PI / 180); // 23.5 dereceyi radiana çevirme (pozitif yönde)
+    const defaultRotationSpeed = -0.005; // Default rotation speed (counterclockwise)
+    const slowRotationSpeed = -0.001; // Reduced speed during interaction
+    const rotationSpeedRef = useRef(defaultRotationSpeed); // Current rotation speed
+    const earthTilt = 23.5 * (Math.PI / 180); // Earth's axial tilt in radians
 
     useEffect(() => {
-        if (!mountRef.current) return; // mountRef.current tanımlı olduğundan emin olun
+        if (!mountRef.current) return; // Ensure mountRef is valid
 
-        // Sahne, Kamera ve Renderer ayarları
+        // Scene, Camera, and Renderer setup
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 5; // Varsayılan zoom değeri
+        camera.position.z = 5; // Default zoom level
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(1200, 575);
         mountRef.current.appendChild(renderer.domElement);
 
-
-        // Earth geometry and texture
+        // Create the Earth geometry and texture
         const earthGeometry = new THREE.SphereGeometry(1.5, 40, 40);
 
       
@@ -34,78 +41,78 @@ const SpinningEarth = () => {
         const earth = new THREE.Mesh(earthGeometry, earthMaterial);
         scene.add(earth);
 
-        // Dünya'nın eksen eğikliğini ayarla
-        earth.rotation.set(earthTilt, 0, 0); // X ekseninde 23.5 derece eğim ver (pozitif)
+        // Set Earth's axial tilt
+        earth.rotation.set(earthTilt, 0, 0);
 
-        // Işıklandırma
-        const ambientLight = new THREE.AmbientLight(0xf5f5f5); // Ortam ışığı
+        // Lighting setup
+        const ambientLight = new THREE.AmbientLight(0xf5f5f5); // Ambient light for overall illumination
         scene.add(ambientLight);
 
-        const pointLight = new THREE.PointLight(0xffffff, 1);
+        const pointLight = new THREE.PointLight(0xffffff, 1); // Directional light
         pointLight.position.set(5, 3, 5);
         scene.add(pointLight);
 
-        // OrbitControls ile fare kontrolü
+        // OrbitControls for mouse interaction (OrbitControls allow the camera to orbit around a target object using mouse or touch interactions.)
         const controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true; // Kontrolleri daha yumuşak hale getirir
+        controls.enableDamping = true; // Smooth control movements
         controls.dampingFactor = 0.1;
-        controls.enableZoom = true; // Zoom yapılmasına izin verir
-        controls.enablePan = true;   // Pan yaparak kamerayı hareket ettirir
+        controls.enableZoom = true; // Allow zooming
+        controls.enablePan = true; // Allow panning
 
-        // Zoom sınırlarını ayarla
-        controls.minDistance = 2; // Minimum zoom seviyesi
-        controls.maxDistance = 10;  // Maksimum zoom seviyesi
+        // Set zoom limits
+        controls.minDistance = 2; // Minimum zoom level
+        controls.maxDistance = 10; // Maximum zoom level
 
-        // Sol tıklama sırasında dönüş hızını azaltma fonksiyonu
+        // Handle left mouse button interactions
         function handleLeftClickStart() {
-            rotationSpeedRef.current = slowRotationSpeed; // Dönüş hızını yavaşlat
+            rotationSpeedRef.current = slowRotationSpeed; // Slow down rotation
         }
 
         function handleLeftClickEnd() {
             setTimeout(() => {
-                rotationSpeedRef.current = defaultRotationSpeed; // 5 saniye sonra dönüş hızını eski haline getir
-            }, 5000); 
+                rotationSpeedRef.current = defaultRotationSpeed; // Reset rotation speed after 5 seconds
+            }, 5000);
         }
 
-        // Sağ tıklama sırasında dönüş hızını azaltma fonksiyonu
+        // Handle right mouse button interactions
         function handleRightClick(e) {
-            if (e.button === 2) { // Sağ tuş kontrolü
-                e.preventDefault(); // Sağ tuş menüsünü engelle
-                rotationSpeedRef.current = slowRotationSpeed; // Dönüş hızını yavaşlat
+            if (e.button === 2) { // Check for right mouse button
+                e.preventDefault(); // Prevent the default context menu
+                rotationSpeedRef.current = slowRotationSpeed; // Slow down rotation
                 setTimeout(() => {
-                    rotationSpeedRef.current = defaultRotationSpeed; // 5 saniye sonra dönüş hızını eski haline getir
+                    rotationSpeedRef.current = defaultRotationSpeed; // Reset rotation speed after 5 seconds
                 }, 5000);
             }
         }
 
-        // Fare sol ve sağ tıklama olaylarını dinleyin
+        // Add mouse event listeners
         renderer.domElement.addEventListener('mousedown', (e) => {
-            if (e.button === 0) handleLeftClickStart(); // Sol tıklama başlangıcı
+            if (e.button === 0) handleLeftClickStart(); // Handle left-click start
         });
         renderer.domElement.addEventListener('mouseup', (e) => {
-            if (e.button === 0) handleLeftClickEnd(); // Sol tıklama sonu
+            if (e.button === 0) handleLeftClickEnd(); // Handle left-click end
         });
         renderer.domElement.addEventListener('mousedown', handleRightClick);
 
-        // Animasyon döngüsü
+        // Animation loop
         const animate = () => {
-            if (!mountRef.current) return; // Bileşen yüklü olduğundan emin olun
+            if (!mountRef.current) return; // Ensure component is mounted
 
-            requestAnimationFrame(animate);
+            requestAnimationFrame(animate); //chedules an animation frame by telling the browser to call a specific function (your animation loop) before the next screen repaint.
 
-            // Dönüş işlemi
-            earth.rotation.y += rotationSpeedRef.current; // Dönüş hızını uygula
+            // Apply rotation
+            earth.rotation.y += rotationSpeedRef.current;
 
-            // Kamera pozisyonu ve zoom kontrolü
+            // Update controls and render the scene
             controls.update();
             renderer.render(scene, camera);
         };
 
         animate();
 
-        // Bileşen kapandığında temizleme işlemi
+        // Cleanup when the component unmounts
         return () => {
-            if (mountRef.current) { // mountRef geçerli olduğundan emin olun
+            if (mountRef.current) {
                 mountRef.current.removeChild(renderer.domElement);
             }
             renderer.dispose();
@@ -115,7 +122,7 @@ const SpinningEarth = () => {
         };
     }, []);
 
-    return <div ref={mountRef} className='sphere-container' />;
+    return <div ref={mountRef} className="sphere-container" />;
 };
 
 export default SpinningEarth;

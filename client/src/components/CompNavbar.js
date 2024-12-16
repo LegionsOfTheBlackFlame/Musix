@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { useState, useEffect, useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -9,7 +8,6 @@ import img from "../logo.png"
 
 const CompNavbar = () => {
     return (
-
         <div
             id='nav_bar'
             className='nav-bar'>

@@ -1,8 +1,0 @@
-.nav-option:hover {
-    color: var(--clr-select);
-  }
-
-  .btn-v1:hover {
-    color: var(--clr-select-dark) !important;
-    background-color: var(--clr-select) !important;
-  }

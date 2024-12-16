@@ -1,6 +1,7 @@
 import React from "react"; 
 import cardLogo from "../game-card-logo.svg";
-import CompGameButton from './CompGameButton.js'; // Import the CompGameButton that contains the button
+import GameButton from './CompGameButton.js'; 
+import "../styles/game-cards.css"; // Import the GameButton that contains the button
 
 const CompGameCard = ({ gameData }) => {
     const bgColorClass = "background-" + `${gameData.color}`;
@@ -20,8 +21,8 @@ const CompGameCard = ({ gameData }) => {
                 <p>Your max score</p>
             </div>
 
-            {/* Render CompGameButton instead of a direct button */}
-            <CompGameButton
+            {/* Render GameButton instead of a direct button */}
+            <GameButton
                 regionIndex={regionIndex}
                 quantity={quantity}
                 bgColorClass={bgColorClass}

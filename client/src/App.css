@@ -27,28 +27,6 @@
 
 
 /* -------------------------------- */
-* {
-  /* outline: 2px solid #ff0000; */
-}
-:root {
-  --clr-dark: #000;
-  --clr-light: #fff;
-  --clr-none: #0000;
-  --clr-green: rgb(43, 182, 115);
-  --clr-red: rgb(255, 70, 45);
-  --clr-red-dark: #531b0b;
-  --clr-yellow: rgb(255, 193, 71);
-  --clr-select: #91bdcc;
-  --clr-select-dark: #253b59;
-  --fnt-menu: "Ubuntu", sans-serif;
-  background-color: var(--clr-dark);
-
-}
-
-h1 {
-  
-  font-family: "Inter-Bold", arial, sans-serif;
-}
 
 .sphere-container {
   
@@ -171,58 +149,12 @@ h1 {
 .nav-option > * {
   text-decoration: none;
 }
-
-
-.hero-comp-container {
-  margin: auto;
-  width: 700px;
-  padding: 10em;
-  /* outline: 2px solid #ff0000; */
-  position: relative;
-}
-
-.hero-comp-container > * {
-  color: var(--clr-light);
-}
-
-.hero-comp-container > h1 {
-  font-size: 7.5em;
-}
-.ScorePage {
-  padding: 5em;
-  background-color: var(--clr-light);
-}
-.popup-overlay {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  border: 2px solid #ff0000;
-}
-
-.popup-content {
-  display: flex;
-  flex-direction: column;
-  width: 50%;
-  height: 50%;
-  margin: auto;
-  margin-top: 5em;
-  
-  padding: 2.5em 5em ;
-  border-radius: 5em;
-  /* background-color: var(--clr-light); */
-  
-}
-.popup-content > h2 {
-  font-size:3em;
-  font-weight: 800;
-  text-align: center;
+#hero_alpha {
   outline: 2px solid #ff0000;
 }
-.popup-content > button {
-  margin: auto;
-  padding: 0.5em 1em;
+.alpha {
+  position: absolute;
+  font-size: 70pt;
 }
 .country, .band {
   position: absolute;
@@ -231,18 +163,23 @@ h1 {
   transition: opacity 1s ease-in-out, transform 1s ease-in-out;
 }
 
-.solv-alpha, .solv-beta {
+.solv-alpha {
   animation: fadeOut 4s forwards;
 }
 
-.coag-alpha, .coag-beta {
+.solv-beta {
+  animation: fadeOut 1s forwards;
+}
+
+.coag-alpha {
   animation: fadeIn 4s forwards;
 }
-.bg-green {
-  background: var(--clr-green);
+.coag-beta {
+  animation: fadeIn 1s forwards;
 }
-.bg-red {
-  background: var(--clr-red);
+
+.dancing-container {
+  background-color: var(--clr-light);
 }
 
 /* Fade animations */
@@ -279,55 +216,7 @@ h1 {
   /* outline: 2px solid #ff0000; */
 }
 
-.game-card-container {
-  /* outline: 2px solid #ff0000; */
-  width: 20%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 8px 24px rgba(149, 157, 165, .2);
-  margin: 0 15px min(20px, 2.3vh);
-  background-color: #fff;
-  border-radius: 20px;
-  padding: 1em 2em;
-  
-  /* Set minimum height to fill the row */
-  min-height: 100%; /* Ensures each card fills available height in the row */
-  height: auto; /* Allows card content to adjust height as needed */
-}
 
-
-.game-card-container>h1 {
-  
-  font-size: clamp(10px, 1.5vw, 30px);
-  margin: 0.5em;
-}
-
-.game-card-container>h2 {
-  text-align: center;
-  font-size: 20px;
-  font-size: clamp(16px,1.5vw, 26px);
-  margin-top: 0;
-  justify-content: center;
-  width: 80%;
-  margin-bottom: 0.5em;
-  display: flex;
-  align-items: center;
-}
-
-.game-card-container>img {
-  height: 10vh;
-  margin: 2vh 0;
-  /* outline: 2px solid #ff0000; */
-}
-
-.game-card-container>p {
-  width: 75%;
-  text-align: center;
-  font-size: clamp(5px, 2vw, 10px);
-  margin: min(9px, .3vh) 5px;
-}
 
 .score-container>h1 {
   font-size: larger;

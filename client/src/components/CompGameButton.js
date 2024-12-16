@@ -5,8 +5,8 @@ import pickCountries from '../functions/FuncPickCountries.js';
 
 // regionIndex: 0 - all, 1-7 - other continents
 //quantity: number of countries to pick
-function GameComponent({ regionIndex, quantity, bgColorClass }) {
-    console.group("init GameComponent...");
+function GameButton({ regionIndex, quantity, bgColorClass }) {
+    console.group("init GameButton...");
     const navigate = useNavigate();
     
     const gameModeProvider = (regionIndex, quantity) => {
@@ -22,7 +22,7 @@ function GameComponent({ regionIndex, quantity, bgColorClass }) {
 
         // Redirect after processing
         navigate('/game', { state: { pickedCountries} }); // Change '/game' to the route you want to redirect to
-        console.groupEnd("End GameComponent...");
+        console.groupEnd("End GameButton...");
     };
 
     return (
@@ -32,4 +32,4 @@ function GameComponent({ regionIndex, quantity, bgColorClass }) {
     );
 }
 
-export default GameComponent;
+export default GameButton;

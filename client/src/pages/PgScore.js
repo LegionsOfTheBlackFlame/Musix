@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CompPlayer from '../components/CompPlayer.js';
-import RoundResultPopup from '../components/CompRoundResults.js';
-import thisGameData from '../dataGame.js';
+import RoundResultPopup from '../components/CompRoundResults.js'; // We're changing the pop-up
+import thisGameData from '../dataGame.js'; // iss 0.15 : replace with a fetch function
 
 export default function PgGame(pickedCountries) {
+    // iss 0.17 : this should be a context
     const [gameData, setGameData] = useState({
         id: null,
         song_name: null,

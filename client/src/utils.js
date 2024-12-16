@@ -1,12 +1,14 @@
 // Provide random index within array limit
-export const randomIndex = (arr) => {
-    if (!Array.isArray(arr) || arr.length === 0) {
-        console.error("Provided array is undefined or empty");
-        return -1; // Return -1 or some error indication if array is invalid
+export const randomOfArray = (pool) => {
+    if (!Array.isArray(pool)) {
+      throw new Error('Input must be an array');
     }
-    return Math.floor(Math.random() * arr.length);
-};
-
+    if (pool.length === 0) {
+      throw new Error('Array must not be empty');
+    }
+    return pool[Math.floor(Math.random() * pool.length)];
+  };
+  
 export const checkLimit = (value, limit) => {
     if (value < limit) {
         return false;
@@ -17,3 +19,4 @@ export const checkLimit = (value, limit) => {
         return false; // Adding a return statement for consistent behavior
     }
 };
+

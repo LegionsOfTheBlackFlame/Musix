@@ -1,5 +1,7 @@
-import { createContext } from "react";
+import React, { useState, useEffect, useContext, createContext } from 'react';
 
-const userContext = createContext(null);
+const AnimationContext = createContext();
+function AnimationProvider({props}) {
+    
 
-export default userContext;
+}

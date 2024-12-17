@@ -1,0 +1,82 @@
+>>> API Endpoints <<<
+    - get song objects 
+    req ([countries])
+    res ([{id: songId, name: songName, artist: artistName, url: songUrl, country: countryName}])
+
+    - get leaderboard data 
+    req (userId?)
+    res([{id: userId, username: username, score: score, rank: rank, url: profileUrl}])
+
+>>> DOCS <<<
+    Casing:
+    - element_id
+    - element-class
+    - CompX (React component)
+    - useX (custom React hook)
+    - PgX (web page)
+
+    Data Object Formats:
+    - leaderboard position: {
+        "user_id": num, 
+        "username": str,
+        "full_name": str,
+        "rank": num,
+        "score": num,
+        "profile_pic": str
+    
+    }
+--------------------------------------------------------------------------------
+
+iss 1 :  Connecting to the server
+iss 2 : Game Logic
+iss 3 : Design and responsivity
+
+iss 4 : Version control
+
+iss 0.1 : Pick final app icon
+iss 0.2 : Decide on leaderboard backend 
+iss 0.3 : Decide on active user functionalities and backend
+iss 0.4 : finalize leaderboard functions
+iss 0.5 : Mark Components JSX
+iss 0.6 : Refactore styles as module.css
+iss 0.7 : Break down into smaller modules
+iss 0.8 : Add context provider
+iss 0.9 : Add a constent module for hard-coded values
+iss 0.10 : Add Fetch mechanism for gamesData
+iss 0.11 : Games list should have its own container
+iss 0.12 : leaderboard data needs a fetch functionalities
+
+iss 0.16 :  Why does PgScore contain PgGame's code?
+
+
+
+extras:
+    -`v7_startTransition` exprimental react router module
+    
+------------------------------------------------------
+
+    16/11/2024: {
+        * (useState :) use functions in setState calls when possible {react stacks pending state updates}
+        * (useState :) when dealing with complex state objects, invoke unchanging key/values before the target key to avoid
+            re-setting all unchanging key/values.
+        * (useEffect :) pass dependencies to the array when possible
+        * (useEffect :) modularize 
+    }
+
+    26/11/2024: {
+        organizing project and refactoring client structure.
+    }
+
+    28/11/2024: {
+        Couldn't initiate our database due to some issue with my local system. Slowly introducing 
+        testing and debugging steps into the code.
+    }
+
+- what does the useState hook return?
+- what are the 3 react life-cycle events?
+- when do useEffect hooks run?
+- how do we tear down useEffect when component unmounts?
+- what is the difference between a state vs a ref?
+- what does the useReducer hook return?
+- what is the difference between useState and useReducer?
+- what is the difference between useCallback and useMemo?

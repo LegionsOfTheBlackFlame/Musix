@@ -11,11 +11,10 @@ dotenv.config();
 const requiredEnvVars = ['MONGO_URI', 'SPOTIFY_CLIENT_ID', 'SPOTIFY_CLIENT_SECRET'];
 const missingVars = requiredEnvVars.filter((varName) => !process.env[varName]);
 if (missingVars.length > 0) {
-  console.error(`Eksik Çevre Değişkenleri: ${missingVars.join(', ')}`);
+  console.error(`missing environment variable: ${missingVars.join(', ')}`);
   process.exit(1);
 }
 
-// Express uygulaması oluştur
 const app = express();
 
 // Middleware

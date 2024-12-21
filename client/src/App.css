@@ -103,7 +103,7 @@
 }
 
 .main-page {
-  pointer-events: none;
+  /* pointer-events: none; */
 outline: 2px solid var(--clr-red-dark);
   background-color: var(--clr-none);
 }
@@ -397,4 +397,9 @@ outline: 2px solid #ff0000;
 
 .color-red {
   color: var(--clr-red) !important;
+}
+
+.land:hover {
+  cursor: pointer;
+ fill: #ff0000;
 }

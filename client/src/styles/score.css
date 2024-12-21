@@ -25,7 +25,7 @@
     /* background-color: var(--clr-light); */
     
   }
-  .popup-content > h2 {
+  .popup-content h2 {
     font-size:3em;
     font-weight: 800;
     text-align: center;

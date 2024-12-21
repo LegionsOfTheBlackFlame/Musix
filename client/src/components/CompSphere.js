@@ -1,128 +1,134 @@
 import * as THREE from 'three';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import earthTexture from '../earth.jpg'; // Replace with your own Earth texture file
 
 /**
- * SpinningEarth Component
- * Renders a 3D spinning Earth with interactive controls.
- * Features:
- * - Smooth rotation with adjustable speed.
- * - Mouse-based interaction for zooming and panning.
- * - Responsive lighting setup to enhance the visual experience.
+ * InteractiveGlobe
+ * Renders a 3D spinning globe with countries as interactive meshes.
  */
-const SpinningEarth = () => {
+const InteractiveGlobe = () => {
+    console.log('[INIT] InteractiveGlobe component initialized');
+
     const mountRef = useRef(null);
-    const defaultRotationSpeed = -0.005; // Default rotation speed (counterclockwise)
-    const slowRotationSpeed = -0.001; // Reduced speed during interaction
-    const rotationSpeedRef = useRef(defaultRotationSpeed); // Current rotation speed
-    const earthTilt = 23.5 * (Math.PI / 180); // Earth's axial tilt in radians
+    const rotationSpeedRef = useRef(-0.005);
+    const [selectedCountry, setSelectedCountry] = useState(null); // Tracks the selected country
 
     useEffect(() => {
-        if (!mountRef.current) return; // Ensure mountRef is valid
-
-        // Scene, Camera, and Renderer setup
+        // === Setup Scene ===
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 5; // Default zoom level
+        camera.position.z = 5;
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(1200, 575);
         mountRef.current.appendChild(renderer.domElement);
 
-        // Create the Earth geometry and texture
-        const earthGeometry = new THREE.SphereGeometry(1.5, 40, 40);
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.1;
+        controls.enableZoom = true;
+        controls.minDistance = 2;
+        controls.maxDistance = 10;
 
-      
-
-        const earthMaterial = new THREE.MeshStandardMaterial({
-            map: new THREE.TextureLoader().load(earthTexture),
-        });
+        // === Add Globe ===
+        const earthGeometry = new THREE.SphereGeometry(1.5, 64, 64);
+        const earthMaterial = new THREE.MeshStandardMaterial({ color: 0xcccccc });
         const earth = new THREE.Mesh(earthGeometry, earthMaterial);
         scene.add(earth);
 
-        // Set Earth's axial tilt
-        earth.rotation.set(earthTilt, 0, 0);
-
-        // Lighting setup
-        const ambientLight = new THREE.AmbientLight(0xf5f5f5); // Ambient light for overall illumination
+        const ambientLight = new THREE.AmbientLight(0xf5f5f5);
         scene.add(ambientLight);
-
-        const pointLight = new THREE.PointLight(0xffffff, 1); // Directional light
+        const pointLight = new THREE.PointLight(0xffffff, 1);
         pointLight.position.set(5, 3, 5);
         scene.add(pointLight);
 
-        // OrbitControls for mouse interaction (OrbitControls allow the camera to orbit around a target object using mouse or touch interactions.)
-        const controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true; // Smooth control movements
-        controls.dampingFactor = 0.1;
-        controls.enableZoom = true; // Allow zooming
-        controls.enablePan = true; // Allow panning
+        // === Raycaster Setup ===
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
 
-        // Set zoom limits
-        controls.minDistance = 2; // Minimum zoom level
-        controls.maxDistance = 10; // Maximum zoom level
+        // Track hovered and clicked objects
+        let hoveredObject = null;
 
-        // Handle left mouse button interactions
-        function handleLeftClickStart() {
-            rotationSpeedRef.current = slowRotationSpeed; // Slow down rotation
+        // === Create Interactive Countries (Fake for Demo) ===
+        const countries = [];
+        for (let i = 0; i < 50; i++) {
+            const countryGeometry = new THREE.SphereGeometry(0.05, 16, 16); // Small sphere
+            const countryMaterial = new THREE.MeshStandardMaterial({ color: 0x0077ff });
+            const countryMesh = new THREE.Mesh(countryGeometry, countryMaterial);
+
+            // Randomly position countries on globe surface
+            const lat = Math.random() * Math.PI - Math.PI / 2;
+            const lon = Math.random() * Math.PI * 2;
+            const radius = 1.51; // Just above globe surface
+
+            countryMesh.position.set(
+                radius * Math.cos(lat) * Math.sin(lon),
+                radius * Math.sin(lat),
+                radius * Math.cos(lat) * Math.cos(lon)
+            );
+            countryMesh.userData.id = `Country-${i + 1}`; // Fake IDs for countries
+            scene.add(countryMesh);
+            countries.push(countryMesh); // Store for raycasting
         }
 
-        function handleLeftClickEnd() {
-            setTimeout(() => {
-                rotationSpeedRef.current = defaultRotationSpeed; // Reset rotation speed after 5 seconds
-            }, 5000);
-        }
+        console.log('[COUNTRIES] Added countries to the globe.');
 
-        // Handle right mouse button interactions
-        function handleRightClick(e) {
-            if (e.button === 2) { // Check for right mouse button
-                e.preventDefault(); // Prevent the default context menu
-                rotationSpeedRef.current = slowRotationSpeed; // Slow down rotation
-                setTimeout(() => {
-                    rotationSpeedRef.current = defaultRotationSpeed; // Reset rotation speed after 5 seconds
-                }, 5000);
+        // === Mouse Events ===
+        const handleMouseMove = (event) => {
+            const rect = renderer.domElement.getBoundingClientRect();
+            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(countries);
+
+            if (intersects.length > 0) {
+                if (hoveredObject !== intersects[0].object) {
+                    if (hoveredObject) hoveredObject.material.color.set(0x0077ff); // Reset color
+                    hoveredObject = intersects[0].object;
+                    hoveredObject.material.color.set(0xff0000); // Highlight hover
+                }
+            } else if (hoveredObject) {
+                hoveredObject.material.color.set(0x0077ff); // Reset color if no hover
+                hoveredObject = null;
             }
-        }
+        };
 
-        // Add mouse event listeners
-        renderer.domElement.addEventListener('mousedown', (e) => {
-            if (e.button === 0) handleLeftClickStart(); // Handle left-click start
-        });
-        renderer.domElement.addEventListener('mouseup', (e) => {
-            if (e.button === 0) handleLeftClickEnd(); // Handle left-click end
-        });
-        renderer.domElement.addEventListener('mousedown', handleRightClick);
+        const handleMouseClick = () => {
+            if (hoveredObject) {
+                const countryId = hoveredObject.userData.id;
+                console.log(`[CLICK] Selected country: ${countryId}`);
+                setSelectedCountry(countryId); // Update state
+            }
+        };
 
-        // Animation loop
+        // Attach listeners
+        renderer.domElement.addEventListener('mousemove', handleMouseMove);
+        renderer.domElement.addEventListener('click', handleMouseClick);
+
+        // === Animation Loop ===
         const animate = () => {
-            if (!mountRef.current) return; // Ensure component is mounted
-
-            requestAnimationFrame(animate); //chedules an animation frame by telling the browser to call a specific function (your animation loop) before the next screen repaint.
-
-            // Apply rotation
+            requestAnimationFrame(animate);
             earth.rotation.y += rotationSpeedRef.current;
-
-            // Update controls and render the scene
             controls.update();
             renderer.render(scene, camera);
         };
-
         animate();
 
-        // Cleanup when the component unmounts
+        // Cleanup
         return () => {
-            if (mountRef.current) {
-                mountRef.current.removeChild(renderer.domElement);
-            }
+            renderer.domElement.removeEventListener('mousemove', handleMouseMove);
+            renderer.domElement.removeEventListener('click', handleMouseClick);
             renderer.dispose();
-            renderer.domElement.removeEventListener('mousedown', handleLeftClickStart);
-            renderer.domElement.removeEventListener('mouseup', handleLeftClickEnd);
-            renderer.domElement.removeEventListener('mousedown', handleRightClick);
         };
     }, []);
 
-    return <div ref={mountRef} className="sphere-container" />;
+    return (
+        <div>
+            <div ref={mountRef} className="sphere-container" />
+            {selectedCountry && <p>Selected Country: {selectedCountry}</p>}
+        </div>
+    );
 };
 
-export default SpinningEarth;
+export default InteractiveGlobe;

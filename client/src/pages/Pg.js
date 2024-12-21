@@ -1,5 +1,5 @@
 import React from 'react';
-import CompHero from '../components/CompHero copy.js';
+import CompTest from '../components/CompTest.js';
 console.log("[ROOT] First run of Pg");
 function Pg() {
     return (
@@ -7,7 +7,7 @@ function Pg() {
             id='main_page'
             className='page main-page'>
                 {console.log("e.main_page rendered")}
-            <CompHero />
+            {/* <CompTest /> */}
         </div>
     )
 }

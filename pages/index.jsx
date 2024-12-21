@@ -1,5 +1,5 @@
 import { Canvas, useThree } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls ,Environment} from '@react-three/drei';
 import { Sphere, MeshDistortMaterial } from '@react-three/drei';
 import Head from 'next/head';
 import { useEffect } from 'react';
@@ -49,7 +49,8 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
-        <Lights />
+        {/* Kolay ışıklandırma: Drei Environment */}
+        <Environment preset="sunset" />
         <Globe />
         <OrbitControls enableZoom enableRotate enablePan />
       </Canvas>

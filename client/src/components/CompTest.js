@@ -6,7 +6,7 @@ const WorldMap = () => {
 
   // Fetch the SVG and parse it
   useEffect(() => {
-    fetch('/BlankMap-World-Equirectangular.svg') // Load from public folder
+    fetch('/map.svg') // Load from public folder
       .then((response) => response.text())
       .then((data) => {
         const parser = new DOMParser();

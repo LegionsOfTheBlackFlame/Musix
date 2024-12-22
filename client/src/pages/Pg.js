@@ -8,7 +8,7 @@ function Pg() {
             id='main_page'
             className='page main-page'>
                 {console.log("e.main_page rendered")}
-            <WorldMap />
+            {/* <WorldMap /> */}
         </div>
     )
 }

@@ -1,20 +1,17 @@
 import * as THREE from 'three';
 import { useEffect, useRef, useState } from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { loadSVG } from '../functions/FuncMapHandler.js';
 
-/**
- * InteractiveGlobe
- * Renders a 3D spinning globe with countries as interactive meshes.
- */
 const InteractiveGlobe = () => {
     console.log('[INIT] InteractiveGlobe component initialized');
 
     const mountRef = useRef(null);
     const rotationSpeedRef = useRef(-0.005);
-    const [selectedCountry, setSelectedCountry] = useState(null); // Tracks the selected country
+    const [selectedCountry, setSelectedCountry] = useState(null);
 
     useEffect(() => {
-        // === Setup Scene ===
+        console.log('[DEBUG] Setting up scene, camera, and renderer');
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.z = 5;
@@ -30,9 +27,9 @@ const InteractiveGlobe = () => {
         controls.minDistance = 2;
         controls.maxDistance = 10;
 
-        // === Add Globe ===
+        console.log('[DEBUG] Adding globe');
         const earthGeometry = new THREE.SphereGeometry(1.5, 64, 64);
-        const earthMaterial = new THREE.MeshStandardMaterial({ color: 0xcccccc });
+        const earthMaterial = new THREE.MeshStandardMaterial({ color: 0xf5f5f5 });
         const earth = new THREE.Mesh(earthGeometry, earthMaterial);
         scene.add(earth);
 
@@ -42,71 +39,60 @@ const InteractiveGlobe = () => {
         pointLight.position.set(5, 3, 5);
         scene.add(pointLight);
 
-        // === Raycaster Setup ===
-        const raycaster = new THREE.Raycaster();
-        const mouse = new THREE.Vector2();
+        console.log('[DEBUG] Loading SVG data');
+        loadSVG('/map.svg')
+            .then((countryGroups) => {
+                console.log('[DEBUG] SVG loaded. Adding countries to scene:', countryGroups);
+                Object.values(countryGroups).forEach((group) => scene.add(group));
 
-        // Track hovered and clicked objects
-        let hoveredObject = null;
+                const raycaster = new THREE.Raycaster();
+                const mouse = new THREE.Vector2();
+                let hoveredGroup = null;
 
-        // === Create Interactive Countries (Fake for Demo) ===
-        const countries = [];
-        for (let i = 0; i < 50; i++) {
-            const countryGeometry = new THREE.SphereGeometry(0.05, 16, 16); // Small sphere
-            const countryMaterial = new THREE.MeshStandardMaterial({ color: 0x0077ff });
-            const countryMesh = new THREE.Mesh(countryGeometry, countryMaterial);
+                const handleMouseMove = (event) => {
+                    const rect = renderer.domElement.getBoundingClientRect();
+                    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+                    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
-            // Randomly position countries on globe surface
-            const lat = Math.random() * Math.PI - Math.PI / 2;
-            const lon = Math.random() * Math.PI * 2;
-            const radius = 1.51; // Just above globe surface
+                    raycaster.setFromCamera(mouse, camera);
+                    const intersects = raycaster.intersectObjects(Object.values(countryGroups), true);
 
-            countryMesh.position.set(
-                radius * Math.cos(lat) * Math.sin(lon),
-                radius * Math.sin(lat),
-                radius * Math.cos(lat) * Math.cos(lon)
-            );
-            countryMesh.userData.id = `Country-${i + 1}`; // Fake IDs for countries
-            scene.add(countryMesh);
-            countries.push(countryMesh); // Store for raycasting
-        }
+                    if (intersects.length > 0) {
+                        const group = intersects[0].object.parent;
+                        if (hoveredGroup !== group) {
+                            console.log('[DEBUG] Hovered over group:', group.userData.id);
+                            if (hoveredGroup) {
+                                hoveredGroup.children.forEach((child) =>
+                                    child.material.color.set(0x0077ff)
+                                );
+                            }
+                            hoveredGroup = group;
+                            hoveredGroup.children.forEach((child) =>
+                                child.material.color.set(0xff0000)
+                            );
+                        }
+                    } else if (hoveredGroup) {
+                        console.log('[DEBUG] Hover removed from group:', hoveredGroup.userData.id);
+                        hoveredGroup.children.forEach((child) =>
+                            child.material.color.set(0x0077ff)
+                        );
+                        hoveredGroup = null;
+                    }
+                };
 
-        console.log('[COUNTRIES] Added countries to the globe.');
+                const handleMouseClick = () => {
+                    if (hoveredGroup) {
+                        const id = hoveredGroup.userData.id;
+                        console.log(`[CLICK] Selected country: ${id}`);
+                        setSelectedCountry(id);
+                    }
+                };
 
-        // === Mouse Events ===
-        const handleMouseMove = (event) => {
-            const rect = renderer.domElement.getBoundingClientRect();
-            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+                renderer.domElement.addEventListener('mousemove', handleMouseMove);
+                renderer.domElement.addEventListener('click', handleMouseClick);
+            })
+            .catch((error) => console.error('[ERROR] Failed to load SVG:', error));
 
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects(countries);
-
-            if (intersects.length > 0) {
-                if (hoveredObject !== intersects[0].object) {
-                    if (hoveredObject) hoveredObject.material.color.set(0x0077ff); // Reset color
-                    hoveredObject = intersects[0].object;
-                    hoveredObject.material.color.set(0xff0000); // Highlight hover
-                }
-            } else if (hoveredObject) {
-                hoveredObject.material.color.set(0x0077ff); // Reset color if no hover
-                hoveredObject = null;
-            }
-        };
-
-        const handleMouseClick = () => {
-            if (hoveredObject) {
-                const countryId = hoveredObject.userData.id;
-                console.log(`[CLICK] Selected country: ${countryId}`);
-                setSelectedCountry(countryId); // Update state
-            }
-        };
-
-        // Attach listeners
-        renderer.domElement.addEventListener('mousemove', handleMouseMove);
-        renderer.domElement.addEventListener('click', handleMouseClick);
-
-        // === Animation Loop ===
         const animate = () => {
             requestAnimationFrame(animate);
             earth.rotation.y += rotationSpeedRef.current;
@@ -115,10 +101,7 @@ const InteractiveGlobe = () => {
         };
         animate();
 
-        // Cleanup
         return () => {
-            renderer.domElement.removeEventListener('mousemove', handleMouseMove);
-            renderer.domElement.removeEventListener('click', handleMouseClick);
             renderer.dispose();
         };
     }, []);

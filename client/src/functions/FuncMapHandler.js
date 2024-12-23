@@ -16,7 +16,7 @@ export const loadSVG = (filePath, materialOptions = {}) => {
                 const countryGroups = {};
 
                 // Radius for wrapping shapes around the globe
-                const radius = 1.51; // Slightly above globe surface
+                const radius = 1.55; // Slightly above globe surface
 
                 paths.forEach((path, index) => {
                     const pathID = path.userData.node.getAttribute('id');
@@ -35,7 +35,7 @@ export const loadSVG = (filePath, materialOptions = {}) => {
                     const shapes = SVGLoader.createShapes(path);
                     shapes.forEach((shape, shapeIndex) => {
                         // Extrude the shape to give it depth
-                        const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.01, bevelEnabled: false });
+                        const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.5, bevelEnabled: false,  curveSegments: 12 });
 
                         // Transform vertices to fit the globe surface
                         const positions = geometry.attributes.position.array;
@@ -60,10 +60,12 @@ export const loadSVG = (filePath, materialOptions = {}) => {
 
                         const material = new THREE.MeshStandardMaterial({
                             color: 0x0077ff,
+                            
                             ...materialOptions
                         });
 
                         const mesh = new THREE.Mesh(geometry, material);
+                        
                         countryGroups[id].add(mesh);
                         console.log(`[DEBUG] Added shape #${shapeIndex} to group ID: ${id}`);
                     });

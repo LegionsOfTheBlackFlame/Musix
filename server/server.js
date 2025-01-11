@@ -73,53 +73,168 @@ app.get('/callback', async (req, res) => {
         res.redirect(`http://localhost:3000?error=Bir hata oluştu.`);
     }
 });
-
-// Rastgele şarkı almak için endpoint
-app.get('/song', async (req, res) => {
-    const accessToken = req.query.accessToken;
-
-    if (!accessToken) {
-        return res.json({ error: "Access token bulunamadı." });
-    }
-
-    try {
-        // Rastgele bir ülke belirle
-        const countries = ['CA', 'US', 'RU', 'GB', 'BR'];
-        const randomCountry = countries[Math.floor(Math.random() * countries.length)];
-
-        // Rastgele bir şarkıyı almak için Spotify API'sini kullanır
-        const trackResponse = await axios.get('https://api.spotify.com/v1/recommendations', {
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            },
-            params: {
-                seed_genres: 'pop',
-                limit: 1,
-                market: randomCountry
-            }
-        });
-
-        if (trackResponse.data.tracks.length === 0) {
-            return res.json({ error: "Şarkı bulunamadı." });
-        }
-
-        const track = trackResponse.data.tracks[0];
-        const songName = track.name;
-        const artistName = track.artists.map(artist => artist.name).join(', ');
-        const previewUrl = track.preview_url || '';
-
-        // Şarkı bilgilerini JSON olarak döndür
-        res.json({
-            songName,
-            artistName,
-            previewUrl,
-            country: randomCountry
-        });
-    } catch (error) {
-        console.error('Hata:', error.response?.data || error.message);
-        res.json({ error: "Bir hata oluştu." });
-    }
-});
+/// Ülkeler ve ISO kodları
+const countryCodeMap = {
+    "United States": "US",
+    "Canada": "CA",
+    "Brazil": "BR",
+    "Mexico": "MX",
+    "Argentina": "AR",
+    "Colombia": "CO",
+    "Chile": "CL",
+    "Peru": "PE",
+    "Venezuela": "VE",
+    "Cuba": "CU",
+    "Uruguay": "UY",
+    "Paraguay": "PY",
+    "Bolivia": "BO",
+    "Ecuador": "EC",
+    "Panama": "PA",
+    "Costa Rica": "CR",
+    "Guatemala": "GT",
+    "Honduras": "HN",
+    "El Salvador": "SV",
+    "Jamaica": "JM",
+    "Germany": "DE",
+    "France": "FR",
+    "United Kingdom": "GB",
+    "Italy": "IT",
+    "Spain": "ES",
+    "Russia": "RU",
+    "Netherlands": "NL",
+    "Belgium": "BE",
+    "Sweden": "SE",
+    "Poland": "PL",
+    "Austria": "AT",
+    "Denmark": "DK",
+    "Norway": "NO",
+    "Ireland": "IE",
+    "Portugal": "PT",
+    "Switzerland": "CH",
+    "Finland": "FI",
+    "Greece": "GR",
+    "Czech Republic": "CZ",
+    "Hungary": "HU",
+    "China": "CN",
+    "India": "IN",
+    "Japan": "JP",
+    "South Korea": "KR",
+    "Indonesia": "ID",
+    "Thailand": "TH",
+    "Vietnam": "VN",
+    "Malaysia": "MY",
+    "Philippines": "PH",
+    "Saudi Arabia": "SA",
+    "United Arab Emirates": "AE",
+    "Israel": "IL",
+    "Turkey": "TR",
+    "Pakistan": "PK",
+    "Bangladesh": "BD",
+    "Iran": "IR",
+    "Iraq": "IQ",
+    "Singapore": "SG",
+    "Nepal": "NP",
+    "Sri Lanka": "LK",
+    "Nigeria": "NG",
+    "Ethiopia": "ET",
+    "Egypt": "EG",
+    "South Africa": "ZA",
+    "Kenya": "KE",
+    "Algeria": "DZ",
+    "Sudan": "SD",
+    "Morocco": "MA",
+    "Ghana": "GH",
+    "Uganda": "UG",
+    "Angola": "AO",
+    "Mozambique": "MZ",
+    "Tanzania": "TZ",
+    "Cameroon": "CM",
+    "Ivory Coast": "CI",
+    "Senegal": "SN",
+    "Zambia": "ZM",
+    "Mali": "ML",
+    "Zimbabwe": "ZW",
+    "Tunisia": "TN"
+  };
+  
+  // Rastgele bir kıta ve ülkeden şarkı almak için güncel endpoint
+  app.get('/game/song/random', async (req, res) => {
+      const { accessToken, difficulty, count = 1 } = req.query;
+  
+      if (!accessToken) {
+          return res.status(400).json({ error: "Access token bulunamadı." });
+      }
+  
+      if (!difficulty) {
+          return res.status(400).json({ error: "Zorluk seviyesi belirtilmelidir." });
+      }
+  
+      try {
+          // Zorluk seviyesini popülerlik aralığına çevir
+          let popularityRange;
+          switch (difficulty.toLowerCase()) {
+              case 'easy':
+                  popularityRange = [80, 100];
+                  break;
+              case 'medium':
+                  popularityRange = [50, 80];
+                  break;
+              case 'hard':
+                  popularityRange = [0, 50];
+                  break;
+              default:
+                  return res.status(400).json({ error: "Geçersiz zorluk seviyesi." });
+          }
+  
+          // Rastgele bir kıta ve ülkeden seçim yap
+          const continents = Object.keys(countries);
+          const randomContinent = continents[Math.floor(Math.random() * continents.length)];
+          const randomCountry = countries[randomContinent][Math.floor(Math.random() * countries[randomContinent].length)];
+          const marketCode = countryCodeMap[randomCountry];
+  
+          if (!marketCode) {
+              return res.status(400).json({ error: `Ülke kodu bulunamadı: ${randomCountry}` });
+          }
+  
+          // Spotify'dan şarkı çekme isteği
+          const trackResponse = await axios.get('https://api.spotify.com/v1/recommendations', {
+              headers: {
+                  'Authorization': `Bearer ${accessToken}`
+              },
+              params: {
+                  seed_genres: 'pop', // Örnek için pop türü
+                  limit: count,       // Kullanıcının belirttiği sayıda şarkı
+                  market: marketCode, // Rastgele seçilen ülkenin ISO kodu
+                  min_popularity: popularityRange[0],
+                  max_popularity: popularityRange[1]
+              }
+          });
+  
+          if (!trackResponse.data.tracks || trackResponse.data.tracks.length === 0) {
+              return res.json({ error: "Şarkı bulunamadı." });
+          }
+  
+          // Şarkı bilgilerini düzenle
+          const tracks = trackResponse.data.tracks.map(track => ({
+              songName: track.name,
+              artistName: track.artists.map(artist => artist.name).join(', '),
+              previewUrl: track.preview_url || '',
+              popularity: track.popularity,
+              continent: randomContinent,
+              country: randomCountry
+          }));
+  
+          res.json({ tracks });
+      } catch (error) {
+          console.error('Hata:', error.response?.data || error.message);
+          res.status(500).json({ error: "Spotify API ile iletişimde bir sorun oluştu." });
+      }
+  });
+  
+  // Kıtaları ve ülkeleri döndüren endpoint
+  app.get('/game/countries', (req, res) => {
+      res.json(countries);
+  });
 
 app.get(`/data`, async (req, res) => {
     res.json({ message: "this is data", data: myData});

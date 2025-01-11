@@ -73,51 +73,70 @@ app.get('/callback', async (req, res) => {
         res.redirect(`http://localhost:3000?error=Bir hata oluştu.`);
     }
 });
-  
-// Rastgele şarkı almak için endpoint
-app.get('/song', async (req, res) => {
-    const accessToken = req.query.accessToken;
+// Rastgele şarkı ve zorluk seviyesine göre şarkı almak için yeni endpoint
+app.get('/game/song', async (req, res) => {
+    const { accessToken, difficulty, count = 1 } = req.query;
 
     if (!accessToken) {
-        return res.json({ error: "Access token bulunamadı." });
+        return res.status(400).json({ error: "Access token bulunamadı." });
+    }
+
+    if (!difficulty) {
+        return res.status(400).json({ error: "Zorluk seviyesi belirtilmelidir." });
     }
 
     try {
-        // Rastgele bir ülke belirle
+        // Zorluk seviyesini popülerlik aralığına çevir (kolay: 80-100, orta: 50-80, zor: 0-50)
+        let popularityRange;
+        switch (difficulty.toLowerCase()) {
+            case 'easy':
+                popularityRange = [80, 100];
+                break;
+            case 'medium':
+                popularityRange = [50, 80];
+                break;
+            case 'hard':
+                popularityRange = [0, 50];
+                break;
+            default:
+                return res.status(400).json({ error: "Geçersiz zorluk seviyesi." });
+        }
+
+        // Rastgele bir ülke seç
         const countries = ['CA', 'US', 'RU', 'GB', 'BR'];
         const randomCountry = countries[Math.floor(Math.random() * countries.length)];
 
-        // Rastgele bir şarkıyı almak için Spotify API'sini kullanır
+        // Spotify'dan şarkı çekme isteği
         const trackResponse = await axios.get('https://api.spotify.com/v1/recommendations', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             },
             params: {
-                seed_genres: 'pop',
-                limit: 1,
-                market: randomCountry
+                seed_genres: 'pop', // Örnek için pop türü
+                limit: count,       // Kullanıcının belirttiği sayıda şarkı
+                market: randomCountry,    // Rastgele seçilen ülke
+                min_popularity: popularityRange[0],
+                max_popularity: popularityRange[1]
             }
         });
 
-        if (trackResponse.data.tracks.length === 0) {
+        if (!trackResponse.data.tracks || trackResponse.data.tracks.length === 0) {
             return res.json({ error: "Şarkı bulunamadı." });
         }
 
-        const track = trackResponse.data.tracks[0];
-        const songName = track.name;
-        const artistName = track.artists.map(artist => artist.name).join(', ');
-        const previewUrl = track.preview_url || '';
-
-        // Şarkı bilgilerini JSON olarak döndür
-        res.json({
-            songName,
-            artistName,
-            previewUrl,
+        // Şarkı bilgilerini düzenle
+        const tracks = trackResponse.data.tracks.map(track => ({
+            songName: track.name,
+            artistName: track.artists.map(artist => artist.name).join(', '),
+            previewUrl: track.preview_url || '',
+            popularity: track.popularity,
             country: randomCountry
-        });
+        }));
+
+        res.json({ tracks });
     } catch (error) {
         console.error('Hata:', error.response?.data || error.message);
-        res.json({ error: "Bir hata oluştu." });
+        res.status(500).json({ error: "Spotify API ile iletişimde bir sorun oluştu." });
     }
 });
 

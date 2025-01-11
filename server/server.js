@@ -73,35 +73,91 @@ app.get('/callback', async (req, res) => {
         res.redirect(`http://localhost:3000?error=Bir hata oluştu.`);
     }
 });
-// Kıtalar ve ülkeler
-const countries = {
-    Asia: [
-      "China", "India", "Japan", "South Korea", "Indonesia", "Thailand", 
-      "Vietnam", "Malaysia", "Philippines", "Saudi Arabia", "United Arab Emirates", 
-      "Israel", "Turkey", "Pakistan", "Bangladesh", "Iran", "Iraq", 
-      "Singapore", "Nepal", "Sri Lanka"
-    ],
-    Africa: [
-      "Nigeria", "Ethiopia", "Egypt", "South Africa", "Kenya", "Algeria", 
-      "Sudan", "Morocco", "Ghana", "Uganda", "Angola", "Mozambique", 
-      "Tanzania", "Cameroon", "Ivory Coast", "Senegal", "Zambia", "Mali", 
-      "Zimbabwe", "Tunisia"
-    ],
-    America: [
-      "United States", "Canada", "Brazil", "Mexico", "Argentina", 
-      "Colombia", "Chile", "Peru", "Venezuela", "Cuba", "Uruguay", 
-      "Paraguay", "Bolivia", "Ecuador", "Panama", "Costa Rica", 
-      "Guatemala", "Honduras", "El Salvador", "Jamaica"
-    ],
-    Europe: [
-      "Germany", "France", "United Kingdom", "Italy", "Spain", 
-      "Russia", "Netherlands", "Belgium", "Sweden", "Poland", 
-      "Austria", "Denmark", "Norway", "Ireland", "Portugal", 
-      "Switzerland", "Finland", "Greece", "Czech Republic", "Hungary"
-    ]
+/// Ülkeler ve ISO kodları
+const countryCodeMap = {
+    "United States": "US",
+    "Canada": "CA",
+    "Brazil": "BR",
+    "Mexico": "MX",
+    "Argentina": "AR",
+    "Colombia": "CO",
+    "Chile": "CL",
+    "Peru": "PE",
+    "Venezuela": "VE",
+    "Cuba": "CU",
+    "Uruguay": "UY",
+    "Paraguay": "PY",
+    "Bolivia": "BO",
+    "Ecuador": "EC",
+    "Panama": "PA",
+    "Costa Rica": "CR",
+    "Guatemala": "GT",
+    "Honduras": "HN",
+    "El Salvador": "SV",
+    "Jamaica": "JM",
+    "Germany": "DE",
+    "France": "FR",
+    "United Kingdom": "GB",
+    "Italy": "IT",
+    "Spain": "ES",
+    "Russia": "RU",
+    "Netherlands": "NL",
+    "Belgium": "BE",
+    "Sweden": "SE",
+    "Poland": "PL",
+    "Austria": "AT",
+    "Denmark": "DK",
+    "Norway": "NO",
+    "Ireland": "IE",
+    "Portugal": "PT",
+    "Switzerland": "CH",
+    "Finland": "FI",
+    "Greece": "GR",
+    "Czech Republic": "CZ",
+    "Hungary": "HU",
+    "China": "CN",
+    "India": "IN",
+    "Japan": "JP",
+    "South Korea": "KR",
+    "Indonesia": "ID",
+    "Thailand": "TH",
+    "Vietnam": "VN",
+    "Malaysia": "MY",
+    "Philippines": "PH",
+    "Saudi Arabia": "SA",
+    "United Arab Emirates": "AE",
+    "Israel": "IL",
+    "Turkey": "TR",
+    "Pakistan": "PK",
+    "Bangladesh": "BD",
+    "Iran": "IR",
+    "Iraq": "IQ",
+    "Singapore": "SG",
+    "Nepal": "NP",
+    "Sri Lanka": "LK",
+    "Nigeria": "NG",
+    "Ethiopia": "ET",
+    "Egypt": "EG",
+    "South Africa": "ZA",
+    "Kenya": "KE",
+    "Algeria": "DZ",
+    "Sudan": "SD",
+    "Morocco": "MA",
+    "Ghana": "GH",
+    "Uganda": "UG",
+    "Angola": "AO",
+    "Mozambique": "MZ",
+    "Tanzania": "TZ",
+    "Cameroon": "CM",
+    "Ivory Coast": "CI",
+    "Senegal": "SN",
+    "Zambia": "ZM",
+    "Mali": "ML",
+    "Zimbabwe": "ZW",
+    "Tunisia": "TN"
   };
   
-  // Rastgele bir kıta ve ülkeden şarkı almak için endpoint
+  // Rastgele bir kıta ve ülkeden şarkı almak için güncel endpoint
   app.get('/game/song/random', async (req, res) => {
       const { accessToken, difficulty, count = 1 } = req.query;
   
@@ -134,6 +190,11 @@ const countries = {
           const continents = Object.keys(countries);
           const randomContinent = continents[Math.floor(Math.random() * continents.length)];
           const randomCountry = countries[randomContinent][Math.floor(Math.random() * countries[randomContinent].length)];
+          const marketCode = countryCodeMap[randomCountry];
+  
+          if (!marketCode) {
+              return res.status(400).json({ error: `Ülke kodu bulunamadı: ${randomCountry}` });
+          }
   
           // Spotify'dan şarkı çekme isteği
           const trackResponse = await axios.get('https://api.spotify.com/v1/recommendations', {
@@ -143,7 +204,7 @@ const countries = {
               params: {
                   seed_genres: 'pop', // Örnek için pop türü
                   limit: count,       // Kullanıcının belirttiği sayıda şarkı
-                  market: randomCountry, // Rastgele seçilen ülke
+                  market: marketCode, // Rastgele seçilen ülkenin ISO kodu
                   min_popularity: popularityRange[0],
                   max_popularity: popularityRange[1]
               }

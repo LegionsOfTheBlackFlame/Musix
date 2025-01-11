@@ -73,7 +73,7 @@ app.get('/callback', async (req, res) => {
         res.redirect(`http://localhost:3000?error=Bir hata oluştu.`);
     }
 });
-
+  
 // Rastgele şarkı almak için endpoint
 app.get('/song', async (req, res) => {
     const accessToken = req.query.accessToken;
